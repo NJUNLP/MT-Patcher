@@ -49,7 +49,7 @@ After collecting the demonstration data from GPT-4, we can train our MT-Patcher 
 
 ```
 bash sh_scripts/deepspeed_run.sh \
-  --train_file $combined_data \
+  --train_file $COMBINED_GPT4_DATA \
   --model_name_or_path Llama2-13b \
   --batch_size 4 \
   --update_freq 8 \
@@ -68,6 +68,19 @@ bash sh_scripts/pipeline.sh \
   --patcher_model $PATCHER_MODEL \
   --generate_feedback 1 --generate_case 1 --generate_analogy 1
 ```
+
+## Step 5: Finetune the student on the patch data
+We can then gather all finetuning data for finetune the student model.
+
+```
+bash sh_scripts/deepspeed_run.sh \
+  --train_file $COMBINED_PATCH_DATA_PATH \
+  --model_name_or_path wxjiao/ParroT-7b \
+  --batch_size 4 \
+  --update_freq 8 \
+  --output_dir $FINETUNED_STUDENT_MODEL \
+  --devices 0,1,2,3,4,5,6,7
+```
 # Citation
 If you find this repo useful, please feel free to leave a star and cite our paper:
 ```
@@ -82,5 +95,4 @@ If you find this repo useful, please feel free to leave a star and cite our pape
 ```
 
 
-## Step 5: Finetune the student on the patch data
-We can then gather all 
+
